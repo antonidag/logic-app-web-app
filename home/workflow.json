@@ -1,0 +1,48 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Response": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200,
+                    "headers": {
+                        "Content-Type": "text/html"
+                    },
+                    "body": "@body('Transform_JSON_To_TEXT_-_full_page')"
+                },
+                "runAfter": {
+                    "Transform_JSON_To_TEXT_-_full_page": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Transform_JSON_To_TEXT_-_full_page": {
+                "type": "Liquid",
+                "kind": "JsonToText",
+                "inputs": {
+                    "content": {
+                        "body": "",
+                        "title": "Home",
+                        "postUrl": "@parameters('BaseUrl')"
+                    },
+                    "map": {
+                        "source": "LogicApp",
+                        "name": "movie_base.liquid"
+                    }
+                },
+                "runAfter": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http"
+            }
+        }
+    },
+    "kind": "Stateful"
+}

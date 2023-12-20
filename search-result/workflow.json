@@ -1,0 +1,101 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Response": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200,
+                    "headers": {
+                        "Content-Type": "text/html"
+                    },
+                    "body": "@body('Transform_JSON_To_TEXT_-_full_page')"
+                },
+                "runAfter": {
+                    "Transform_JSON_To_TEXT_-_full_page": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Transform_JSON_To_TEXT_-_movie_cards": {
+                "type": "Liquid",
+                "kind": "JsonToText",
+                "inputs": {
+                    "content": {
+                        "movies": "@outputs('Compose_-_chunk_search_array')"
+                    },
+                    "map": {
+                        "source": "LogicApp",
+                        "name": "card_moive.liquid"
+                    }
+                },
+                "runAfter": {
+                    "Compose_-_chunk_search_array": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "HTTP_-_search_for_movies": {
+                "type": "Http",
+                "inputs": {
+                    "uri": "http://www.omdbapi.com/?apikey=@{parameters('API_Key')}&s=@{outputs('Compose')}",
+                    "method": "GET"
+                },
+                "runAfter": {
+                    "Compose": [
+                        "SUCCEEDED"
+                    ]
+                },
+                "runtimeConfiguration": {
+                    "contentTransfer": {
+                        "transferMode": "Chunked"
+                    }
+                }
+            },
+            "Transform_JSON_To_TEXT_-_full_page": {
+                "type": "Liquid",
+                "kind": "JsonToText",
+                "inputs": {
+                    "content": {
+                        "body": "@body('Transform_JSON_To_TEXT_-_movie_cards')",
+                        "title": "Home",
+                        "postUrl": "@parameters('BaseUrl')"
+                    },
+                    "map": {
+                        "source": "LogicApp",
+                        "name": "movie_base.liquid"
+                    }
+                },
+                "runAfter": {
+                    "Transform_JSON_To_TEXT_-_movie_cards": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Compose_-_chunk_search_array": {
+                "type": "Compose",
+                "inputs": "@chunk(body('HTTP_-_search_for_movies')?['Search'],4)",
+                "runAfter": {
+                    "HTTP_-_search_for_movies": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Compose": {
+                "type": "Compose",
+                "inputs": "@first(triggerBody()?['$formdata'])?['value']",
+                "runAfter": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http"
+            }
+        }
+    },
+    "kind": "Stateful"
+}

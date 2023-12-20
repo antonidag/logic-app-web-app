@@ -1,0 +1,10 @@
+{
+  "API_Key": {
+    "type": "String",
+    "value": "@appsetting('API_Key')"
+  },
+  "BaseUrl": {
+    "type": "String",
+    "value": "@appsetting('SEARCH_WORKFLOW_URL')"
+  }
+}
