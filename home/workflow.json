@@ -25,7 +25,7 @@
                     "content": {
                         "body": "",
                         "title": "Home",
-                        "postUrl": "@parameters('BaseUrl')"
+                        "postUrl": "@parameters('SEARCH_WORKFLOW_URL')"
                     },
                     "map": {
                         "source": "LogicApp",

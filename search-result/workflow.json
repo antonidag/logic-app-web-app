@@ -60,7 +60,7 @@
                     "content": {
                         "body": "@body('Transform_JSON_To_TEXT_-_movie_cards')",
                         "title": "Home",
-                        "postUrl": "@parameters('BaseUrl')"
+                        "postUrl": "@parameters('SEARCH_WORKFLOW_URL')"
                     },
                     "map": {
                         "source": "LogicApp",

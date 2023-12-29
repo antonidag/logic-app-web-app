@@ -3,7 +3,7 @@
     "type": "String",
     "value": "@appsetting('API_Key')"
   },
-  "BaseUrl": {
+  "SEARCH_WORKFLOW_URL": {
     "type": "String",
     "value": "@appsetting('SEARCH_WORKFLOW_URL')"
   }
