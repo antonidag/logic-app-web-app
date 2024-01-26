@@ -1,6 +1,8 @@
 # 🚀 Logic App Web App
 ## Description
 Proof of concept that Logic App Standard can be used as web app. 
+
+See my full blog post [here](https://www.antonbjorkman.com/posts/logic-app-web-app/)!
 ## Installation
 Let's gather our tools:
 
